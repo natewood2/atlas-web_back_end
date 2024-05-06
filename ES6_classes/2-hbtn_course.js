@@ -32,7 +32,7 @@ export default class HolbertonCourse {
     this._length = value;
   }
   get students() {
-    return this._studentsl
+    return this._students
   }
   set students(value) {
     this._students = this._checkArrayOfStrings(value, 'students');
