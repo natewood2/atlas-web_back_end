@@ -1,4 +1,4 @@
-import ClassRoom from "./0-classroom.js";
+import ClassRoom from './0-classroom.js';
 
 export default function initializeRooms() {
   const arrayOfClassroom = [];
@@ -8,6 +8,4 @@ export default function initializeRooms() {
   arrayOfClassroom.push(new ClassRoom(34));
 
   return arrayOfClassroom;
-};
-
-const arrayOfClassroom = initializeRooms();
+}
