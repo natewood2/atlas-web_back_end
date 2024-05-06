@@ -5,10 +5,10 @@ export default class HolbertonCourse {
     }
     this._name = name;
     this._length = length;
-    this._students = HolbertonCourse._checkArrayOfStrings(students, 'students');
+    this._students = this._checkArrayOfStrings(students, 'students');
   }
 
-  static _checkArrayOfStrings(value) {
+  _checkArrayOfStrings(value) {
     if (!Array.isArray(value) || !value.every((item) => typeof item === 'string')) {
       throw new TypeError('err');
     }
