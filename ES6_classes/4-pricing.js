@@ -30,15 +30,6 @@ export default class Pricing {
   }
 
   static convertPrice(amount, conversionRate) {
-    if (typeof amount !== 'number') {
-      throw new TypeError('Amount must be a number.');
-    }
-    if (typeof conversionRate !== 'number') {
-      throw new TypeError('Conversion rate must be a number.');
-    }
-    if (!(amount instanceof Currency)) {
-      throw new TypeError('Currency must be an instance of Currency.');
-    }
     return amount * conversionRate;
   }
 }
