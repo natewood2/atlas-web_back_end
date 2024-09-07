@@ -11,9 +11,9 @@ class LRUCache(BaseCaching):
     """
     LRU Caching:
         - Add iteming using LRU algo
-        this algorithm is based on the 
-        strategy that whenever a page fault 
-        occurs, the least recently used page 
+        this algorithm is based on the
+        strategy that whenever a page fault
+        occurs, the least recently used page
         will be replaced with a new page.
     """
     def __init__(self):
