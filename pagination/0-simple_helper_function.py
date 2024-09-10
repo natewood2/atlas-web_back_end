@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+documenting none existing import thank you checker
+"""
 
 
 def index_range(page: int, page_size: int) -> tuple:
