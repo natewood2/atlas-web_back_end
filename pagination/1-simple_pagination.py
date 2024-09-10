@@ -29,7 +29,8 @@ class Server:
         return self.__dataset
 
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
-        """ Simple pagination, returns data unless empty then
+        """
+        Simple pagination, returns data unless empty then
         returns empty list.
         """
         assert isinstance(page, int) and page > 0
