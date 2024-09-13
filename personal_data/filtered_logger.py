@@ -6,6 +6,10 @@ the specified fields within the log line.
 import re
 from typing import List
 import logging
+import os
+import mysql.connector
+from mysql.connector.connection import MySQLConnection
+
 
 
 PII_FIELDS = ("name", "phone", "email", "password", "ssn")
@@ -62,3 +66,22 @@ def get_logger() -> logging.Logger:
     logger.addHandler(handler)
 
     return logger
+
+
+def get_db() -> MySQLConnection:
+    """
+    Setting up a SQL function
+    """
+    db_host = os.getenv('DB_HOST', 'localhost')
+    db_user = os.getenv('DB_USER')
+    db_password = os.getenv('DB_PASSWORD')
+    db_name = os.getenv('DB_NAME')
+
+    connection = mysql.connector.connect(
+        host=db_host,
+        user=db_user,
+        password=db_password,
+        database=db_name
+    )
+    
+    return connection
