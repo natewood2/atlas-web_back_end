@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
-""" Authentication Class
 """
-from flask import request 
+Authentication Class
+"""
+from flask import request
+from typing import List, TypeVar
 
 
 class Auth:
-    """ Class for Authentication Logic
+    """
+    Class for Authentication Logic
     """
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
-        """ Method that require used authentication.
+        """
+        Method that require used authentication.
         """
         return False
 
