@@ -89,8 +89,8 @@ class BasicAuth(Auth):
         """
         if request is None:
             return None
-        auth = self.authorization_header(request)
-        if auth is None:
+        auth_header = self.authorization_header(request)
+        if auth_header is None:
             return None
         base64_auth = self.extract_base64_authorization_header(auth_header)
         if base64_auth is None:
