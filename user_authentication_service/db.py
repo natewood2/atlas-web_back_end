@@ -55,3 +55,4 @@ class DB:
             raise NoResultFound(f"No user found for {kwargs}")
         except InvalidRequestError:
             raise InvalidRequestError(f"Invalid query arguments: {kwargs}")
+        
