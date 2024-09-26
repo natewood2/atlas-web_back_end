@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, PropertyMock
 from parameterized import parameterized
 from client import GithubOrgClient
-
 
 class TestGithubOrgClient(unittest.TestCase):
     @parameterized.expand([
@@ -18,7 +17,7 @@ class TestGithubOrgClient(unittest.TestCase):
 
     def test_public_repos_url(self):
         payload = {"repos_url": "https://api.github.com/orgs/testorg/repos"}
-
+        
         with patch.object(GithubOrgClient, "org", new_callable=PropertyMock) as mock_org:
             mock_org.return_value = payload
             client = GithubOrgClient("testorg")
