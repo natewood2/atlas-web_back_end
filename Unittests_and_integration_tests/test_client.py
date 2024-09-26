@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 import unittest
-from unittest.mock import patch, PropertyMock
-from parameterized import parameterized
+from unittest.mock import patch, PropertyMock, Mock
+from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
+from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 
 class TestGithubOrgClient(unittest.TestCase):
     @parameterized.expand([
@@ -48,3 +49,47 @@ class TestGithubOrgClient(unittest.TestCase):
         client = GithubOrgClient("testorg")
         result = client.has_license(repo, license_key)
         self.assertEqual(result, expected)
+
+
+@parameterized_class([
+    {"org_payload": org_payload, "repos_payload": repos_payload, "expected_repos": expected_repos, "apache2_repos": apache2_repos}
+])
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        """Set up patchers and mock requests.get"""
+        cls.get_patcher = patch('requests.get', side_effect=cls.mocked_requests_get)
+        cls.mock_get = cls.get_patcher.start()
+
+    @classmethod
+    def tearDownClass(cls):
+        """Stop patching requests.get"""
+        cls.get_patcher.stop()
+
+    @staticmethod
+    def mocked_requests_get(url):
+        """Mocked requests.get behavior for various URLs."""
+        if 'orgs' in url:
+            mock_response = Mock()
+            mock_response.json.return_value = org_payload
+            return mock_response
+        elif 'repos' in url:
+            mock_response = Mock()
+            mock_response.json.return_value = repos_payload
+            return mock_response
+        return None
+
+    def test_public_repos(self):
+        """Test GithubOrgClient.public_repos method"""
+        client = GithubOrgClient('apache')
+        self.assertEqual(client.public_repos(), self.expected_repos)
+
+    def test_public_repos_with_license(self):
+        """Test GithubOrgClient.public_repos method with a specific license filter"""
+        client = GithubOrgClient('apache')
+        self.assertEqual(client.public_repos(license="apache-2.0"), self.apache2_repos)
+
+
+if __name__ == '__main__':
+    unittest.main()
