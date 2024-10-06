@@ -9,6 +9,27 @@ import uuid
 from typing import Union, Callable, Optional
 
 
+def call_history(method: Callable) -> Callable:
+    """
+    stores history of input and output
+    """
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        """
+        tracking input and output
+        """
+        input_key = method.__qualname__ + ":inputs"
+        output_key = method.__qualname__ + ":outputs"
+
+        self._redis.rpush(input_key, str(args))
+
+        output = method(self, *args, **kwargs)
+
+        self._redis.rpush(output_key, str(output))
+        return output
+
+    return wrapper
+
 def count_calls(method: Callable) -> Callable:
     """
     decorator to count
@@ -69,4 +90,18 @@ class Cache:
         """
         return self.get(key, lambda x:
                         int(x) if isinstance(x, bytes) else x)
-    
+
+    def get_call_history(self, method_name: str) -> dict:
+        """
+        fetch input and output
+        """
+        inputs_key = method_name + ":inputs"
+        outputs_key = method_name + ":outputs"
+
+        inputs = self._redis.lrange(inputs_key, 0, -1)
+        outputs = self._redis.lrange(outputs_key, 0, -1)
+
+        return {
+            "inputs": [inp.decode('utf-8') for inp in inputs],
+            "outputs": [out.decode('utf-8') for out in outputs],
+        }
