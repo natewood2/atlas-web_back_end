@@ -11,7 +11,7 @@ function calculateNumber(type, a, b) {
             if (roundedB === 0) return 'Error';
             return roundedA / roundedB;
         default:
-            throw new Error('Error');
+            throw new Error('Invalid operation type');
     }
 }
 
