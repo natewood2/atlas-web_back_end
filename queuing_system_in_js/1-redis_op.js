@@ -1,6 +1,6 @@
-import { createClient, print } from 'redis';
+import { createClient } from 'redis';
 
-const client = createClient();
+const client = createClient({ legacyMode: true });
 
 client.on('connect', () => {
   console.log('Redis client connected to the server');
@@ -10,29 +10,31 @@ client.on('error', (err) => {
   console.error(`Redis client not connected to the server: ${err.message}`);
 });
 
+// need in v4+
+client.connect();
 
-// had to use async for the Redis library has been updated recently
-async function setNewSchool(schoolName, value) {
-    await client.set(schoolName, value, print);
-  }
-  
-  async function displaySchoolValue(schoolName) {
-    const result = await client.get(schoolName);
-    console.log(result);
-  }
-  
-  async function main() {
-    await client.connect();
-    
-    try {
-      await displaySchoolValue('Holberton');
-      await setNewSchool('HolbertonSanFrancisco', '100');
-      await displaySchoolValue('HolbertonSanFrancisco');
-    } catch (error) {
-      console.error(error);
-    } finally {
-      await client.quit();
+function setNewSchool(schoolName, value) {
+  client.set(schoolName, value, (err, reply) => {
+    if (err) {
+      console.error(`Error setting value for ${schoolName}: ${err.message}`);
+    } else {
+      console.log(`Reply: ${reply}`);
     }
-  }
+  });
+}
 
-  main();
+function displaySchoolValue(schoolName) {
+  client.get(schoolName, (err, reply) => {
+    if (err) {
+      console.error(`Error getting value for ${schoolName}: ${err.message}`);
+    } else {
+      console.log(reply);
+    }
+  });
+}
+
+client.on('ready', () => {
+  displaySchoolValue('Holberton');
+  setNewSchool('HolbertonSanFrancisco', '100');
+  displaySchoolValue('HolbertonSanFrancisco');
+});
